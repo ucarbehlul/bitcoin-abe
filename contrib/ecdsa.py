@@ -49,6 +49,12 @@ AML_TEMPLATE = """
 <head>
     <link rel="stylesheet" type="text/css" href="http://s3.ecdsa.org/style.css" />
     <link rel="shortcut icon" href="http://s3.ecdsa.org/favicon.ico" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <title>%(title)s</title>
 </head>
 <body>
