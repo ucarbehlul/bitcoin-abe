@@ -63,6 +63,7 @@ DEFAULT_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <!-- Optional theme -->
@@ -78,7 +79,9 @@ DEFAULT_TEMPLATE = """
     <h1><a href="%(dotdot)s%(HOMEPAGE)s"><img
      src="%(dotdot)s%(STATIC_PATH)slogo32.png" alt="Abe logo" /></a> %(h1)s
     </h1>
-    %(body)s
+    <div class="content">
+        %(body)s
+    </div>
     <p><a href="%(dotdot)sq">API</a> (machine-readable pages)</p>
     <p style="font-size: smaller">
         <span style="font-style: italic">
@@ -462,35 +465,35 @@ class Abe:
         if hi is None:
             hi = int(rows[0][1])
         basename = os.path.basename(page['env']['PATH_INFO'])
-
-        nav = ['<a href="',
-               basename, '?count=', str(count), '">&lt;&lt;</a>']
-        nav += [' <a href="', basename, '?hi=', str(hi + count),
-                 '&amp;count=', str(count), '">&lt;</a>']
+    
+        nav = ['<li><a href="',
+               basename, '?count=', str(count), '">&lt;&lt;</a></li>']
+        nav += ['<li><a href="', basename, '?hi=', str(hi + count),
+                 '&amp;count=', str(count), '">&lt;</a></li>']
         nav += [' ', '&gt;']
         if hi >= count:
-            nav[-1] = ['<a href="', basename, '?hi=', str(hi - count),
-                        '&amp;count=', str(count), '">', nav[-1], '</a>']
+            nav[-1] = ['<li><a href="', basename, '?hi=', str(hi - count),
+                        '&amp;count=', str(count), '">', nav[-1], '</a></li>']
         nav += [' ', '&gt;&gt;']
         if hi != count - 1:
-            nav[-1] = ['<a href="', basename, '?hi=', str(count - 1),
-                        '&amp;count=', str(count), '">', nav[-1], '</a>']
+            nav[-1] = ['<li><a href="', basename, '?hi=', str(count - 1),
+                        '&amp;count=', str(count), '">', nav[-1], '</a></li>']
         for c in (20, 50):
             nav += [' ']
-            if c != count:
-                nav += ['<a href="', basename, '?count=', str(c)]
-                if hi is not None:
-                    nav += ['&amp;hi=', str(max(hi, c - 1))]
-                nav += ['">']
+            nav += ['<li>'] if c != count else ['<li class="disabled">']
+            nav += ['<a href="', basename, '?count=', str(c)]
+            if hi is not None:
+                nav += ['&amp;hi=', str(max(hi, c - 1))]
+            nav += ['">']
             nav += [' ', str(c)]
-            if c != count:
-                nav += ['</a>']
+            nav += ['</a>']
+            nav += ['</li>']
 
-        nav += [' <a href="', page['dotdot'], '">Search</a>']
+        nav += ['<li><a href="', page['dotdot'], '">Search</a></li>']
 
         extra = False
         #extra = True
-        body += ['<p>', nav, '</p>\n',
+        body += ['<ul class="pagination">', nav, '</ul>\n',
                  '<table class="table table-striped"><tr><th>Block</th><th>Approx. Time</th>',
                  '<th>Transactions</th><th>Value Out</th>',
                  '<th>Difficulty</th><th>Outstanding</th>',
@@ -539,7 +542,7 @@ class Abe:
                  '</td><td>', '%8g' % total_ss] if extra else '',
                 '</td></tr>\n']
 
-        body += ['</table>\n<p>', nav, '</p>\n']
+        body += ['</table>\n<ul class="pagination">', nav, '</ul>\n']
 
     def _show_block(abe, where, bind, page, dotdotblock, chain):
         address_version = ('\0' if chain is None
